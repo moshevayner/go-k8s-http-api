@@ -55,7 +55,7 @@ test: fmt vet ## Run tests.
 	go test ./... -coverprofile cover.out -mod=vendor
 
 GOLANGCI_LINT = $(shell pwd)/bin/golangci-lint
-GOLANGCI_LINT_VERSION ?= v1.55.2
+GOLANGCI_LINT_VERSION ?= v1.63.4
 golangci-lint:
 	@[ -f $(GOLANGCI_LINT) ] || { \
 	set -e ;\

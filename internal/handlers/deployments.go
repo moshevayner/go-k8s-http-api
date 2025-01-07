@@ -87,7 +87,7 @@ func (h *DeploymentsHandler) GetDeploymentReplicas(w http.ResponseWriter, r *htt
 	namespace, deployment := parseNamespaceAndDeploymentNameFromURL(r)
 
 	// Get the deployment object
-	d, err := h.getDeployment(r.Context(), namespace, deployment, w)
+	d, err := h.getDeployment(r.Context(), namespace, deployment)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		encErr := json.NewEncoder(w).Encode(APIError{fmt.Sprintf("Error getting deployment %s in namespace %s", deployment, namespace)})
@@ -120,7 +120,7 @@ func (h *DeploymentsHandler) SetDeploymentReplicas(w http.ResponseWriter, r *htt
 	namespace, deployment := parseNamespaceAndDeploymentNameFromURL(r)
 
 	// Get the deployment object
-	d, err := h.getDeployment(r.Context(), namespace, deployment, w)
+	d, err := h.getDeployment(r.Context(), namespace, deployment)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		encErr := json.NewEncoder(w).Encode(APIError{fmt.Sprintf("Error getting deployment %s in namespace %s", deployment, namespace)})
@@ -137,7 +137,7 @@ func (h *DeploymentsHandler) SetDeploymentReplicas(w http.ResponseWriter, r *htt
 	if err != nil {
 		// log the error, return a 400 Bad Request and the error message
 		resp := fmt.Sprintf("Error parsing request body: %v", err)
-		klog.Errorf(resp)
+		klog.Errorf("%v", resp)
 		w.WriteHeader(http.StatusBadRequest)
 		encErr := json.NewEncoder(w).Encode(APIError{resp})
 		if encErr != nil {
@@ -151,7 +151,7 @@ func (h *DeploymentsHandler) SetDeploymentReplicas(w http.ResponseWriter, r *htt
 	err = rep.Validate()
 	if err != nil {
 		resp := fmt.Sprintf("Validation error: %v", err)
-		klog.Errorf(resp)
+		klog.Errorf("%v", resp)
 		w.WriteHeader(http.StatusBadRequest)
 		encErr := json.NewEncoder(w).Encode(APIError{resp})
 		if encErr != nil {
@@ -224,7 +224,7 @@ func parseNamespaceAndDeploymentNameFromURL(r *http.Request) (string, string) {
 }
 
 // getDeployment returns a deployment object from the client (either from the cache or from the API)
-func (h *DeploymentsHandler) getDeployment(ctx context.Context, namespace, deployment string, w http.ResponseWriter) (*appsv1.Deployment, error) {
+func (h *DeploymentsHandler) getDeployment(ctx context.Context, namespace, deployment string) (*appsv1.Deployment, error) {
 	d := &appsv1.Deployment{}
 	err := h.Get(ctx, client.ObjectKey{
 		Namespace: namespace,
