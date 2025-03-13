@@ -1,5 +1,5 @@
 # Build the api binary
-FROM golang:1.21.4 as builder
+FROM golang:1.24.1 as builder
 ARG TARGETOS
 ARG TARGETARCH
 
