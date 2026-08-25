@@ -3,7 +3,7 @@ module github.com/moshevayner/go-k8s-http-api-interface
 go 1.26.3
 
 require (
-	k8s.io/api v0.36.3
+	k8s.io/api v0.36.4
 	k8s.io/apimachinery v0.36.4
 	k8s.io/client-go v0.36.3
 	k8s.io/klog v1.0.0
